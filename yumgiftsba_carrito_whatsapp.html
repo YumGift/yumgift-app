@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>YUMGIFTSBA</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f6d7e7">
+<style>
+body { font-family: Arial, sans-serif; background:#fcebf3; margin:0; padding:20px; text-align:center; }
+h1 { font-size:28px; color:#ff4c8b; margin-bottom:20px; }
+.card { background:white; padding:15px; margin:10px auto; width:90%; max-width:400px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+.card h2 { margin:0; font-size:18px; }
+.card p { margin:5px 0; font-weight:bold; width:100%; text-align:left; }
+.qty-container { display:flex; align-items:center; justify-content:center; gap:10px; margin-top:5px; }
+button.qty-btn { width:30px; height:30px; font-size:18px; border:none; border-radius:6px; background:#ff7aa6; color:white; cursor:pointer; }
+input.qty { width:50px; text-align:center; border-radius:6px; border:1px solid #ccc; }
+.btn { display:inline-block; background:#25D366; padding:12px 20px; border-radius:8px; color:white; text-decoration:none; margin-top:20px; font-size:16px; }
+.total { font-size:20px; font-weight:bold; margin-top:20px; color:#ff4c8b; }
+</style>
+</head>
+<body>
+<h1>Menú YUMGIFTSBA 🛒✨</h1>
+
+<div class="card">
+  <div>
+    <h2>Minidonas x12</h2>
+    <p>$5500</p>
+  </div>
+  <div class="qty-container">
+    <button class="qty-btn">-</button>
+    <input class="qty" type="number" min="0" value="0" data-precio="5500" data-nombre="Minidonas x12">
+    <button class="qty-btn">+</button>
+  </div>
+</div>
+
+<div class="card">
+  <div>
+    <h2>Minidonas x6</h2>
+    <p>$2700</p>
+  </div>
+  <div class="qty-container">
+    <button class="qty-btn">-</button>
+    <input class="qty" type="number" min="0" value="0" data-precio="2700" data-nombre="Minidonas x6">
+    <button class="qty-btn">+</button>
+  </div>
+</div>
+
+<div class="card">
+  <div>
+    <h2>Tequeños queso x25 (listos)</h2>
+    <p>$16500</p>
+  </div>
+  <div class="qty-container">
+    <button class="qty-btn">-</button>
+    <input class="qty" type="number" min="0" value="0" data-precio="16500" data-nombre="Tequeños x25 (listos)">
+    <button class="qty-btn">+</button>
+  </div>
+</div>
+
+<div class="card">
+  <div>
+    <h2>Tequeños queso x25 (crudos)</h2>
+    <p>$10500</p>
+  </div>
+  <div class="qty-container">
+    <button class="qty-btn">-</button>
+    <input class="qty" type="number" min="0" value="0" data-precio="10500" data-nombre="Tequeños x25 (crudos)">
+    <button class="qty-btn">+</button>
+  </div>
+</div>
+
+<div class="card">
+  <div>
+    <h2>Tequeños queso x12 (crudos)</h2>
+    <p>$8000</p>
+  </div>
+  <div class="qty-container">
+    <button class="qty-btn">-</button>
+    <input class="qty" type="number" min="0" value="0" data-precio="8000" data-nombre="Tequeños x12 (crudos)">
+    <button class="qty-btn">+</button>
+  </div>
+</div>
+
+<div class="card">
+  <div>
+    <h2>Tequeños queso x12 (listos)</h2>
+    <p>$10500</p>
+  </div>
+  <div class="qty-container">
+    <button class="qty-btn">-</button>
+    <input class="qty" type="number" min="0" value="0" data-precio="10500" data-nombre="Tequeños x12 (listos)">
+    <button class="qty-btn">+</button>
+  </div>
+</div>
+
+<div class="total">Total: $<span id="total">0</span></div>
+<a class="btn" id="whatsapp">Hacer Pedido por WhatsApp</a>
+
+<script>
+// Calcular total
+function actualizarTotal() {
+  let total = 0;
+  document.querySelectorAll('.qty').forEach(input => {
+    total += input.value * parseFloat(input.dataset.precio);
+  });
+  document.getElementById('total').innerText = total;
+}
+
+// Escuchar cambios en input
+document.querySelectorAll('.qty').forEach(input => {
+  input.addEventListener('input', actualizarTotal);
+});
+
+// Botones + y -
+document.querySelectorAll('.qty-container').forEach(container => {
+  const input = container.querySelector('.qty');
+  const btns = container.querySelectorAll('.qty-btn');
+  btns[0].addEventListener('click', () => {
+    if (input.value > 0) input.value = parseInt(input.value) - 1;
+    actualizarTotal();
+  });
+  btns[1].addEventListener('click', () => {
+    input.value = parseInt(input.value) + 1;
+    actualizarTotal();
+  });
+});
+
+// Botón WhatsApp
+document.getElementById('whatsapp').addEventListener('click', () => {
+  const productos = [];
+  document.querySelectorAll('.qty').forEach(input => {
+    if (input.value > 0) {
+      productos.push(`${input.dataset.nombre}: ${input.value}`);
+    }
+  });
+  const total = parseFloat(document.getElementById('total').innerText);
+  if (productos.length === 0) {
+    alert("Por favor, agrega productos al carrito.");
+    return;
+  }
+  const mensaje = `Hola! Quiero hacer este pedido:\n${productos.join('\n')}\nTotal: $${total}`;
+  const url = `https://wa.me/5491135936372?text=${encodeURIComponent(mensaje)}`;
+  window.open(url, '_blank');
+});
+
+// Inicializar total
+actualizarTotal();
+
+// Service Worker
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('service-worker.js'); }
+</script>
+</body>
+</html>
