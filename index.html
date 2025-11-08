@@ -96,7 +96,6 @@ function actualizarTotal() {
   document.getElementById('total').innerText = total;
 }
 
-// Botones + y -
 document.querySelectorAll('.qty-container').forEach(container => {
   const input = container.querySelector('.qty');
   const btns = container.querySelectorAll('.qty-btn');
@@ -105,7 +104,6 @@ document.querySelectorAll('.qty-container').forEach(container => {
   input.addEventListener('input', actualizarTotal);
 });
 
-// Mostrar campos de envío
 const envioSelect = document.getElementById('envio');
 const direccionInput = document.getElementById('direccion');
 const departamentoInput = document.getElementById('departamento');
@@ -127,7 +125,7 @@ envioSelect.addEventListener('change', () => {
 });
 
 function generarCodigoPedido(){
-  return Math.random().toString(36).substring(2,9) + '-' + Math.random().toString(36).substring(2,6) + '-' + Math.random().toString(36).substring(2,5);
+  return 'PED-' + Math.floor(Math.random()*1000000);
 }
 
 document.getElementById('whatsapp').addEventListener('click', () => {
@@ -153,7 +151,7 @@ document.getElementById('whatsapp').addEventListener('click', () => {
   const hora = document.getElementById('horaEntrega').value;
   const codigo = generarCodigoPedido();
 
-  let mensaje = `¡Hola Yumgiftsba! Te paso el resumen de mi pedido:\n\nPedido: ${codigo}\nNombre: ${nombre}\nTeléfono: ${telefono}\n\nForma de pago: ${pago}\nEntrega: ${envio}`;
+  let mensaje = `¡Hola Yumgiftsba! Te paso el resumen de mi pedido:\n\nNúmero de pedido: ${codigo}\nNombre: ${nombre}\nTeléfono: ${telefono}\n\nForma de pago: ${pago}\nEntrega: ${envio}`;
   if(envio==='Envio a domicilio'){
     mensaje += `\nDirección: ${direccion || 'No especificada'}\nDepartamento: ${depto || 'No especificado'}\nReferencia: ${referencia || 'No especificada'}`;
   }
