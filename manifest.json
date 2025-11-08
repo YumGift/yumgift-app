@@ -1,0 +1,1 @@
+{"name": "Yumgift", "short_name": "Yumgift", "start_url": "./index.html", "display": "standalone", "background_color": "#f6d7e7", "theme_color": "#f6d7e7", "icons": [{"src": "yumgift_icon.png", "sizes": "512x512", "type": "image/png"}]}

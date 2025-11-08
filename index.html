@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>YUMGIFT</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f6d7e7">
+<style>
+body { font-family: Arial, sans-serif; background:#fcebf3; margin:0; padding:20px; text-align:center; }
+.card { background:white; padding:20px; margin:10px auto; width:80%; border-radius:12px; }
+h1 { font-size:28px; }
+.btn { display:inline-block; background:#ff7aa6; padding:12px 20px; border-radius:8px; color:white; text-decoration:none; }
+</style>
+</head>
+<body>
+<h1>Menú Yumgift 🍩</h1>
+
+<div class="card"><h2>Minidonas x12</h2><p>$5500</p></div>
+<div class="card"><h2>Minidonas x6</h2><p>$2700</p></div>
+<div class="card"><h2>Tequeños queso x25 (listos)</h2><p>$16500</p></div>
+<div class="card"><h2>Tequeños queso x25 (crudos)</h2><p>$10500</p></div>
+<div class="card"><h2>Tequeños queso x12 (crudos)</h2><p>$8000</p></div>
+<div class="card"><h2>Tequeños queso x12 (listos)</h2><p>$10500</p></div>
+
+<a class="btn" href="https://wa.me/1135936372" target="_blank">Hacer Pedido por WhatsApp</a>
+
+<script>
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('service-worker.js'); }
+</script>
+</body>
+</html>
