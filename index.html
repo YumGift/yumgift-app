@@ -160,8 +160,8 @@ document.getElementById('whatsapp').addEventListener('click', () => {
   mensaje += `\n\nMi pedido es:\n${productos.join('\n')}\n\nSubtotal: $${total}\nDelivery: Consultar\n\nTOTAL: $${total}`;
   if(pago==='MercadoPago') mensaje += `\nLink de pago: https://link.mercadopago.com.ar/yumgiftsba`;
 
-  const url = `https://wa.me/5491135936372?text=${encodeURIComponent(mensaje)}`;
-  window.open(url, '_blank');
+  // Abrir WhatsApp
+  window.open(`https://wa.me/5491135936372?text=${encodeURIComponent(mensaje)}`, '_blank');
 });
 
 actualizarTotal();
