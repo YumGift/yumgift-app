@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>YUMGIFTSBA</title>
-<link rel="manifest" href="manifest.json">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#f6d7e7">
 <style>
 body { font-family: Arial, sans-serif; background:#fcebf3; margin:0; padding:20px; text-align:center; }
@@ -97,7 +97,7 @@ input.qty { width:50px; text-align:center; border-radius:6px; border:1px solid #
 <a class="btn" id="whatsapp">Hacer Pedido por WhatsApp</a>
 
 <script>
-// Calcular total
+// Función para actualizar total
 function actualizarTotal() {
   let total = 0;
   document.querySelectorAll('.qty').forEach(input => {
@@ -129,25 +129,19 @@ document.querySelectorAll('.qty-container').forEach(container => {
 document.getElementById('whatsapp').addEventListener('click', () => {
   const productos = [];
   document.querySelectorAll('.qty').forEach(input => {
-    if (input.value > 0) {
-      productos.push(`${input.dataset.nombre}: ${input.value}`);
-    }
+    if (input.value > 0) productos.push(`${input.dataset.nombre}: ${input.value}`);
   });
   const total = parseFloat(document.getElementById('total').innerText);
   if (productos.length === 0) {
     alert("Por favor, agrega productos al carrito.");
     return;
-  }
-  const mensaje = `Hola! Quiero hacer este pedido:\n${productos.join('\n')}\nTotal: $${total}`;
+  }const mensaje = `Hola! Quiero hacer este pedido:\n${productos.join('\n')}\nTotal: $${total}`;
   const url = `https://wa.me/5491135936372?text=${encodeURIComponent(mensaje)}`;
   window.open(url, '_blank');
 });
 
 // Inicializar total
 actualizarTotal();
-
-// Service Worker
-if ('serviceWorker' in navigator) { navigator.serviceWorker.register('service-worker.js'); }
 </script>
 </body>
 </html>
