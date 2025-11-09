@@ -9,62 +9,47 @@
 body { font-family: Arial, sans-serif; background:#fcebf3; margin:0; padding:20px; text-align:center; }
 h1 { font-size:28px; color:#ff4c8b; margin-bottom:20px; }
 .card { background:white; padding:15px; margin:10px auto; width:90%; max-width:400px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+
 .card h2 { margin:0; font-size:18px; }
 .card p { margin:5px 0; font-weight:bold; width:100%; text-align:left; }
 .qty-container { display:flex; align-items:center; justify-content:center; gap:10px; margin-top:5px; }
 button.qty-btn { width:30px; height:30px; font-size:18px; border:none; border-radius:6px; background:#ff7aa6; color:white; cursor:pointer; }
-input.qty, select, input[type="text"], input[type="date"], input[type="time"] { width:90%; max-width:400px; padding:8px; margin:8px 0; border-radius:6px; border:1px solid #ccc; }
+input.qty { width:40px; text-align:center; }
+
+/* BOTÓN CARRITO */
+#carritoBtn {
+  position: fixed;
+  top: 15px;
+  right: 18px;
+  background: #ff4c8b;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0px 3px 6px rgba(0,0,0,0.25);
+}
+
 .btn { display:inline-block; background:#25D366; padding:12px 20px; border-radius:8px; color:white; text-decoration:none; margin-top:20px; font-size:16px; }
 .total { font-size:20px; font-weight:bold; margin-top:20px; color:#ff4c8b; }
+
 #direccion, #departamento, #referencia { display:none; }
-
-/* Carrito botón */
-#carritoBtn{
-  position:fixed;
-  top:15px;
-  right:20px;
-  background:#ff4c8b;
-  color:white;
-  padding:10px 15px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:bold;
-  box-shadow:0 3px 6px rgba(0,0,0,0.25);
-}
-
-/* Popup */
-#carritoPopup{
-  display:none;
-  position:fixed;
-  top:0; left:0; right:0; bottom:0;
-  background:rgba(0,0,0,0.5);
-  justify-content:center;
-  align-items:center;
-}
-.popup-box{
-  background:white;
-  padding:20px;
-  border-radius:12px;
-  width:90%;
-  max-width:400px;
-  text-align:left;
-}
 </style>
 </head>
-
 <body>
 
 <div id="carritoBtn">🛒 $0</div>
 
-<h1>Menú YUMGIFTSBA 🛒✨</h1>
+<h1>Menú YUMGIFTSBA ✨</h1>
 
 <input type="text" id="clienteNombre" placeholder="Tu nombre completo">
 <input type="text" id="clienteTelefono" placeholder="Tu teléfono">
 
 <label><strong>Elige tus productos YUM!!</strong></label>
 
+<!-- PRODUCTOS -->
 <div class="card">
-  <div><h2>Minidonas x12</h2><p>$5.500</p></div>
+  <div><h2>Minidonas x12</h2><p>$5500</p></div>
   <div class="qty-container">
     <button class="qty-btn">-</button>
     <input class="qty" type="number" min="0" value="0" data-precio="5500" data-nombre="Minidonas x12">
@@ -73,7 +58,7 @@ input.qty, select, input[type="text"], input[type="date"], input[type="time"] { 
 </div>
 
 <div class="card">
-  <div><h2>Minidonas x6</h2><p>$2.700</p></div>
+  <div><h2>Minidonas x6</h2><p>$2700</p></div>
   <div class="qty-container">
     <button class="qty-btn">-</button>
     <input class="qty" type="number" min="0" value="0" data-precio="2700" data-nombre="Minidonas x6">
@@ -82,7 +67,7 @@ input.qty, select, input[type="text"], input[type="date"], input[type="time"] { 
 </div>
 
 <div class="card">
-  <div><h2>Tequeños queso x12 (crudos)</h2><p>$8.000</p></div>
+  <div><h2>Tequeños x12 (crudos)</h2><p>$8000</p></div>
   <div class="qty-container">
     <button class="qty-btn">-</button>
     <input class="qty" type="number" min="0" value="0" data-precio="8000" data-nombre="Tequeños x12 (crudos)">
@@ -91,7 +76,7 @@ input.qty, select, input[type="text"], input[type="date"], input[type="time"] { 
 </div>
 
 <div class="card">
-  <div><h2>Tequeños queso x25 (crudos)</h2><p>$10.500</p></div>
+  <div><h2>Tequeños x25 (crudos)</h2><p>$10500</p></div>
   <div class="qty-container">
     <button class="qty-btn">-</button>
     <input class="qty" type="number" min="0" value="0" data-precio="10500" data-nombre="Tequeños x25 (crudos)">
@@ -99,26 +84,31 @@ input.qty, select, input[type="text"], input[type="date"], input[type="time"] { 
   </div>
 </div>
 
+<!-- LINK A OTROS -->
+<a class="btn" href="otros.html" style="background:#ff4c8b;">Ver más productos</a>
+
 <div class="total">Total: $<span id="total">0</span></div>
 
-<a class="btn" id="whatsapp">Enviar Pedido por WhatsApp</a>
 
-<!-- POPUP -->
-<div id="carritoPopup">
-  <div class="popup-box">
-    <h3>Carrito</h3>
-    <pre id="detalleCarrito"></pre>
-    <p><strong>Total: $<span id="totalCarritoPopup">0</span></strong></p>
-    <button onclick="cerrarCarrito()">Cerrar</button>
-  </div>
-</div>
+<!-- BOTÓN HACER PEDIDO -->
+<a class="btn" id="whatsapp">Enviar Pedido por WhatsApp</a>
 
 <script>
 function guardarCarrito(){
-  let carrito = [];
-  document.querySelectorAll('.qty').forEach(i=>{
-    if(Number(i.value)>0){
-      carrito.push({nombre:i.dataset.nombre, precio:Number(i.dataset.precio), cantidad:Number(i.value)});
+  let carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
+
+  carrito = carrito.filter(i =>
+    !document.querySelector(`input[data-nombre="${i.nombre}"]`)
+  );
+
+  document.querySelectorAll('.qty').forEach(input => {
+    const cantidad = Number(input.value);
+    if(cantidad > 0){
+      carrito.push({
+        nombre: input.dataset.nombre,
+        precio: Number(input.dataset.precio),
+        cantidad: cantidad
+      });
     }
   });
   localStorage.setItem("carritoYumgifts", JSON.stringify(carrito));
@@ -126,9 +116,10 @@ function guardarCarrito(){
 }
 
 function actualizarCarritoBtn(){
-  const c = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
-  const total = c.reduce((s,i)=>s+(i.precio*i.cantidad),0);
+  const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
+  const total = carrito.reduce((s,i)=>s+(i.precio*i.cantidad),0);
   document.getElementById('carritoBtn').innerText = `🛒 $${total}`;
+  document.getElementById('total').innerText = total;
 }
 
 document.querySelectorAll('.qty-btn').forEach(btn=>{
@@ -141,16 +132,26 @@ document.querySelectorAll('.qty-btn').forEach(btn=>{
 });
 document.querySelectorAll('.qty').forEach(i=>i.addEventListener('input', guardarCarrito));
 
-document.getElementById('carritoBtn').addEventListener('click', abrirCarrito);
+document.getElementById('carritoBtn').addEventListener('click',()=>{
+  document.getElementById('whatsapp').click();
+});
 
-function abrirCarrito(){
-  const c = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
-  document.getElementById('detalleCarrito').innerText = c.map(i=>`${i.nombre}: ${i.cantidad}`).join("\n");
-  const total = c.reduce((s,i)=>s+(i.precio*i.cantidad),0);
-  document.getElementById('totalCarritoPopup').innerText = total;
-  document.getElementById('carritoPopup').style.display="flex";
-}
-function cerrarCarrito(){ document.getElementById('carritoPopup').style.display="none"; }
+document.getElementById('whatsapp').addEventListener('click', () => {
+  const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
+  if(carrito.length===0){ alert("Agregá productos primero"); return; }
+
+  let total = carrito.reduce((s,i)=>s+i.precio*i.cantidad,0);
+  let productos = carrito.map(i=>`${i.nombre}: ${i.cantidad}`).join("\n");
+
+  let mensaje =
+`¡Hola Yumgiftsba! Te paso mi pedido:
+
+${productos}
+
+TOTAL: $${total}`;
+
+  window.open(`https://wa.me/5491135936372?text=${encodeURIComponent(mensaje)}`,'_blank');
+});
 
 actualizarCarritoBtn();
 </script>
