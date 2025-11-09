@@ -17,8 +17,6 @@ input.qty { width:40px; text-align:center; }
 .btn { display:inline-block; background:#25D366; padding:12px 20px; border-radius:8px; color:white; text-decoration:none; margin-top:20px; font-size:16px; }
 .volver { display:block; margin:20px auto; color:#ff4c8b; font-weight:bold; text-decoration:none; }
 #carritoBtn { position: fixed; top: 15px; right: 18px; background: #ff4c8b; color: white; padding: 10px 14px; border-radius: 10px; cursor: pointer; font-weight: bold; box-shadow: 0px 3px 6px rgba(0,0,0,0.25); }
-
-/* POPUP MODAL */
 #popup { display:none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 999; }
 #popup > div { background:white; padding:20px; border-radius:12px; max-width:400px; width:90%; text-align:left; position: fixed; top:50%; left:50%; transform: translate(-50%,-50%); }
 #popup button { width:100%; margin-top:10px; font-size:16px; padding:10px; border:none; border-radius:6px; cursor:pointer; }
@@ -33,6 +31,7 @@ input.qty { width:40px; text-align:center; }
 <h1>Tequeños</h1>
 <a class="volver" href="index.html">← Volver al Menú Principal</a>
 
+<!-- PRODUCTOS -->
 <div class="card">
   <div><h2>Mini Tequeños x25 (Crudos)</h2><p>$14000</p></div>
   <div class="qty-container">
@@ -83,65 +82,64 @@ input.qty { width:40px; text-align:center; }
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  function guardarCarrito() {
-    let carrito = [];
-    document.querySelectorAll('.qty').forEach(input => {
-      const cantidad = Number(input.value);
-      if (cantidad > 0) {
-        carrito.push({
-          nombre: input.dataset.nombre,
-          precio: Number(input.dataset.precio),
-          cantidad: cantidad
-        });
-      }
-    });
-    localStorage.setItem("carritoYumgifts", JSON.stringify(carrito));
-    actualizarCarritoBtn();
-  }
-
-  function actualizarCarritoBtn() {
-    const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
-    const total = carrito.reduce((s,i)=>s+(i.precio*i.cantidad),0);
-    document.getElementById('carritoBtn').innerText = `🛒 $${total}`;
-  }
-
-  document.querySelectorAll('.qty-btn').forEach(btn => {
-    btn.addEventListener('click', ()=>{
-      const input = btn.parentElement.querySelector('.qty');
-      if(btn.textContent==='+') input.value++;
-      if(btn.textContent==='-' && input.value>0) input.value--;
-      guardarCarrito();
-    });
+function guardarCarrito(){
+  let carrito = [];
+  document.querySelectorAll('.qty').forEach(input=>{
+    const cantidad = Number(input.value);
+    if(cantidad>0){
+      carrito.push({nombre: input.dataset.nombre, precio:Number(input.dataset.precio), cantidad:cantidad});
+    }
   });
-
-  document.querySelectorAll('.qty').forEach(i => i.addEventListener('input', guardarCarrito));
-
-  // Mostrar popup
-  document.getElementById('whatsapp').addEventListener('click', ()=>{
-    const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
-    if(carrito.length===0){ alert("Agregá productos primero"); return; }
-    let html = carrito.map(i=>`<p>${i.nombre}: ${i.cantidad}</p>`).join('');
-    document.getElementById('popupProductos').innerHTML = html;
-    document.getElementById('popupTotal').innerText = carrito.reduce((s,i)=>s+i.precio*i.cantidad,0);
-    document.getElementById('popup').style.display = 'block';
-  });
-
-  document.getElementById('cerrarPopup').addEventListener('click', ()=>{
-    document.getElementById('popup').style.display = 'none';
-  });
-
-  document.getElementById('confirmPedido').addEventListener('click', ()=>{
-    const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
-    let total = carrito.reduce((s,i)=>s+i.precio*i.cantidad,0);
-    let productos = carrito.map(i=>`${i.nombre}: ${i.cantidad}`).join("\n");
-    let mensaje = `¡Hola Yumgiftsba! Te paso mi pedido:\n\n${productos}\n\nTOTAL: $${total}`;
-    window.open(`https://wa.me/5491135936372?text=${encodeURIComponent(mensaje)}`,'_blank');
-    document.getElementById('popup').style.display = 'none';
-  });
-
+  localStorage.setItem("carritoYumgifts", JSON.stringify(carrito));
   actualizarCarritoBtn();
+}
+
+function actualizarCarritoBtn(){
+  const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
+  const total = carrito.reduce((s,i)=>s+(i.precio*i.cantidad),0);
+  document.getElementById('carritoBtn').innerText = `🛒 $${total}`;
+}
+
+function cargarCarrito(){
+  const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
+  carrito.forEach(item=>{
+    const input = document.querySelector(`input[data-nombre="${item.nombre}"]`);
+    if(input) input.value = item.cantidad;
+  });
+  actualizarCarritoBtn();
+}
+
+document.querySelectorAll('.qty-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const input = btn.parentElement.querySelector('.qty');
+    if(btn.textContent==='+') input.value++;
+    if(btn.textContent==='-' && input.value>0) input.value--;
+    guardarCarrito();
+  });
 });
+document.querySelectorAll('.qty').forEach(i=>i.addEventListener('input', guardarCarrito));
+
+document.getElementById('whatsapp').addEventListener('click', ()=>{
+  const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
+  if(carrito.length===0){ alert("Agregá productos primero"); return; }
+  let html = carrito.map(i=>`<p>${i.nombre}: ${i.cantidad}</p>`).join('');
+  document.getElementById('popupProductos').innerHTML = html;
+  document.getElementById('popupTotal').innerText = carrito.reduce((s,i)=>s+i.precio*i.cantidad,0);
+  document.getElementById('popup').style.display='block';
+});
+
+document.getElementById('cerrarPopup').addEventListener('click',()=>{ document.getElementById('popup').style.display='none'; });
+
+document.getElementById('confirmPedido').addEventListener('click',()=>{
+  const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
+  let total = carrito.reduce((s,i)=>s+i.precio*i.cantidad,0);
+  let productos = carrito.map(i=>`${i.nombre}: ${i.cantidad}`).join("\n");
+  let mensaje = `¡Hola Yumgiftsba! Te paso mi pedido:\n\n${productos}\n\nTOTAL: $${total}`;
+  window.open(`https://wa.me/5491135936372?text=${encodeURIComponent(mensaje)}`,'_blank');
+  document.getElementById('popup').style.display='none';
+});
+
+document.addEventListener('DOMContentLoaded', cargarCarrito);
 </script>
 
 </body>
