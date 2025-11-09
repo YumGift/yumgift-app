@@ -13,112 +13,135 @@ h1 { font-size:28px; color:#ff4c8b; margin-bottom:20px; }
 .card p { margin:5px 0; font-weight:bold; width:100%; text-align:left; }
 .qty-container { display:flex; align-items:center; justify-content:center; gap:10px; margin-top:5px; }
 button.qty-btn { width:30px; height:30px; font-size:18px; border:none; border-radius:6px; background:#ff7aa6; color:white; cursor:pointer; }
-input.qty, select, input[type="text"], input[type="date"], input[type="time"] { width:90%; max-width:400px; padding:8px; margin:8px 0; border-radius:6px; border:1px solid #ccc; }
+input.qty { width:40px; text-align:center; }
+
 .btn { display:inline-block; background:#25D366; padding:12px 20px; border-radius:8px; color:white; text-decoration:none; margin-top:20px; font-size:16px; }
-.total { font-size:20px; font-weight:bold; margin-top:20px; color:#ff4c8b; }
-#direccion, #departamento, #referencia { display:none; }
 .volver { display:block; margin:20px auto; color:#ff4c8b; font-weight:bold; text-decoration:none; }
+
+/* Botón carrito arriba derecha */
+#carritoBtn {
+  position: fixed;
+  top: 15px;
+  right: 18px;
+  background: #ff4c8b;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0px 3px 6px rgba(0,0,0,0.25);
+}
 </style>
 </head>
 
 <body>
-<h1>Tequeños</h1>
 
+<!-- Botón carrito -->
+<div id="carritoBtn">🛒 $0</div>
+
+<h1>Tequeños</h1>
 <a class="volver" href="index.html">← Volver al Menú Principal</a>
 
-
 <div class="card">
-  <div><h2>Mini Tequeños x25 (Crudos)</h2><p>$14.000</p></div>
+  <div><h2>Mini Tequeños x25 (Crudos)</h2><p>$14000</p></div>
   <div class="qty-container">
     <button class="qty-btn">-</button>
-    <input class="qty" type="number" min="0" value="0" data-precio="14.000" data-nombre="Mini Tequeños x25 (Crudos)">
+    <input class="qty" type="number" min="0" value="0" data-precio="14000" data-nombre="Mini Tequeños x25 (Crudos)">
     <button class="qty-btn">+</button>
   </div>
 </div>
 
 <div class="card">
-  <div><h2>Mini Tequeños x25 (Fritos)</h2><p>$18.000</p></div>
+  <div><h2>Mini Tequeños x25 (Fritos)</h2><p>$18000</p></div>
   <div class="qty-container">
     <button class="qty-btn">-</button>
-    <input class="qty" type="number" min="0" value="0" data-precio="18.000" data-nombre="Mini Tequeños x25 (Fritos)">
+    <input class="qty" type="number" min="0" value="0" data-precio="18000" data-nombre="Mini Tequeños x25 (Fritos)">
     <button class="qty-btn">+</button>
   </div>
 </div>  
   
 <div class="card">
-  <div><h2>Tequeños Clasicos x12 (Fritos)</h2><p>$15.000</p></div>
+  <div><h2>Tequeños Clasicos x12 (Fritos)</h2><p>$15000</p></div>
   <div class="qty-container">
     <button class="qty-btn">-</button>
-    <input class="qty" type="number" min="0" value="0" data-precio="15.000" data-nombre="Tequeños Clasicos x12 (Fritos)">
+    <input class="qty" type="number" min="0" value="0" data-precio="15000" data-nombre="Tequeños Clasicos x12 (Fritos)">
     <button class="qty-btn">+</button>
   </div>
 </div>
 
 <div class="card">
-  <div><h2>Tequeños Clasicos x12 (Crudos)</h2><p>$10.000</p></div>
+  <div><h2>Tequeños Clasicos x12 (Crudos)</h2><p>$10000</p></div>
   <div class="qty-container">
     <button class="qty-btn">-</button>
-    <input class="qty" type="number" min="0" value="0" data-precio="10.000" data-nombre="Tequeños Clasicos x12 (Crudos)">
+    <input class="qty" type="number" min="0" value="0" data-precio="10000" data-nombre="Tequeños Clasicos x12 (Crudos)">
     <button class="qty-btn">+</button>
   </div>
 </div>
 
-<div class="total">Total: $<span id="total">0</span></div>
-
-<select id="pago">
-  <option value="Efectivo">Efectivo</option>
-  <option value="MercadoPago">Mercado Pago</option>
-</select>
-
-<select id="envio">
-  <option value="Retiro en local">Retiro en local</option>
-  <option value="Envio a domicilio">Envío a domicilio</option>
-</select>
-
-<input type="text" id="direccion" placeholder="Dirección">
-<input type="text" id="departamento" placeholder="Departamento">
-<input type="text" id="referencia" placeholder="Referencia">
-
-<label><strong>Fecha de entrega</strong></label>
-<input type="date" id="fechaEntrega">
-
-<label><strong>Hora de entrega</strong></label>
-<input type="time" id="horaEntrega">
-
 <a class="btn" id="whatsapp">Enviar Pedido por WhatsApp</a>
 
 <script>
-function actualizarTotal(){
-  let total = 0;
-  document.querySelectorAll('.qty').forEach(input=>{
-    total += Number(input.value)*Number(input.dataset.precio);
+// Guardar carrito compartido
+function guardarCarrito(){
+  let carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
+  carrito = carrito.filter(i => !document.querySelector(`[data-nombre="${i.nombre}"]`) || false);
+
+  document.querySelectorAll('.qty').forEach(input => {
+    const cantidad = Number(input.value);
+    if(cantidad > 0){
+      carrito.push({
+        nombre: input.dataset.nombre,
+        precio: Number(input.dataset.precio),
+        cantidad: cantidad
+      });
+    }
   });
-  document.getElementById('total').innerText = total;
+  localStorage.setItem("carritoYumgifts", JSON.stringify(carrito));
+  actualizarCarritoBtn();
 }
 
+// Mostrar monto en botón carrito
+function actualizarCarritoBtn(){
+  const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
+  const total = carrito.reduce((s,i)=>s+(i.precio*i.cantidad),0);
+  document.getElementById('carritoBtn').innerText = `🛒 $${total}`;
+}
+
+// Sumadores
 document.querySelectorAll('.qty-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     const input = btn.parentElement.querySelector('.qty');
-    if(btn.textContent==='+') input.value++;
+    if(btn.textContent==='+' ) input.value++;
     if(btn.textContent==='-' && input.value>0) input.value--;
-    actualizarTotal();
+    guardarCarrito();
   });
 });
+document.querySelectorAll('.qty').forEach(i=>i.addEventListener('input', guardarCarrito));
 
-document.querySelectorAll('.qty').forEach(input=>{
-  input.addEventListener('input', actualizarTotal);
+// Botón carrito abre WhatsApp
+document.getElementById('carritoBtn').addEventListener('click',()=>{
+  document.getElementById('whatsapp').click();
 });
 
-document.getElementById('whatsapp').addEventListener('click',()=>{
-  const productos=[];
-  document.querySelectorAll('.qty').forEach(input=>{
-    if(input.value>0) productos.push(`${input.dataset.nombre}: ${input.value}`);
-  });
-  if(productos.length===0){ alert('Agregá productos'); return; }
-  const total=document.getElementById('total').innerText;
-  let mensaje = `Hola! Quiero pedir:\n${productos.join('\n')}\n\nTotal: $${total}`;
-  window.open(`https://wa.me/5491135936372?text=${encodeURIComponent(mensaje)}`);
+// WhatsApp final con carrito completo
+document.getElementById('whatsapp').addEventListener('click', () => {
+  const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
+  if(carrito.length===0){ alert("Agregá productos primero"); return; }
+
+  let total = carrito.reduce((s,i)=>s+i.precio*i.cantidad,0);
+  let productos = carrito.map(i=>`${i.nombre}: ${i.cantidad}`).join("\n");
+
+  let mensaje =
+`¡Hola Yumgiftsba! Te paso mi pedido:
+
+${productos}
+
+TOTAL: $${total}`;
+
+  window.open(`https://wa.me/5491135936372?text=${encodeURIComponent(mensaje)}`,'_blank');
 });
+
+actualizarCarritoBtn();
 </script>
 
 </body>
