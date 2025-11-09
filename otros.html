@@ -36,7 +36,6 @@ input.qty { width:40px; text-align:center; }
 
 <body>
 
-<!-- Botón carrito -->
 <div id="carritoBtn">🛒 $0</div>
 
 <h1>Tequeños</h1>
@@ -81,10 +80,14 @@ input.qty { width:40px; text-align:center; }
 <a class="btn" id="whatsapp">Enviar Pedido por WhatsApp</a>
 
 <script>
-// Guardar carrito compartido
+document.addEventListener("DOMContentLoaded", () => {
+
 function guardarCarrito(){
   let carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
-  carrito = carrito.filter(i => !document.querySelector(`[data-nombre="${i.nombre}"]`) || false);
+
+  carrito = carrito.filter(i =>
+    !document.querySelector(`input[data-nombre="${i.nombre}"]`)
+  );
 
   document.querySelectorAll('.qty').forEach(input => {
     const cantidad = Number(input.value);
@@ -96,18 +99,17 @@ function guardarCarrito(){
       });
     }
   });
+
   localStorage.setItem("carritoYumgifts", JSON.stringify(carrito));
   actualizarCarritoBtn();
 }
 
-// Mostrar monto en botón carrito
 function actualizarCarritoBtn(){
   const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
   const total = carrito.reduce((s,i)=>s+(i.precio*i.cantidad),0);
   document.getElementById('carritoBtn').innerText = `🛒 $${total}`;
 }
 
-// Sumadores
 document.querySelectorAll('.qty-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     const input = btn.parentElement.querySelector('.qty');
@@ -116,14 +118,13 @@ document.querySelectorAll('.qty-btn').forEach(btn=>{
     guardarCarrito();
   });
 });
+
 document.querySelectorAll('.qty').forEach(i=>i.addEventListener('input', guardarCarrito));
 
-// Botón carrito abre WhatsApp
 document.getElementById('carritoBtn').addEventListener('click',()=>{
   document.getElementById('whatsapp').click();
 });
 
-// WhatsApp final con carrito completo
 document.getElementById('whatsapp').addEventListener('click', () => {
   const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
   if(carrito.length===0){ alert("Agregá productos primero"); return; }
@@ -142,6 +143,7 @@ TOTAL: $${total}`;
 });
 
 actualizarCarritoBtn();
+});
 </script>
 
 </body>
