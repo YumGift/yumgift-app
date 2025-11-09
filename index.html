@@ -1,64 +1,68 @@
 <script>
-function guardarCarrito(){
-  let carrito = [];
-  document.querySelectorAll('.qty').forEach(input => {
-    const cantidad = Number(input.value);
-    if (cantidad > 0) {
-      carrito.push({
-        nombre: input.dataset.nombre,
-        precio: Number(input.dataset.precio),
-        cantidad: cantidad
-      });
-    }
+document.addEventListener("DOMContentLoaded", () => {
+
+  function guardarCarrito(){
+    let carrito = [];
+    document.querySelectorAll('.qty').forEach(input => {
+      const cantidad = Number(input.value);
+      if (cantidad > 0) {
+        carrito.push({
+          nombre: input.dataset.nombre,
+          precio: Number(input.dataset.precio),
+          cantidad: cantidad
+        });
+      }
+    });
+    localStorage.setItem("carritoYumgifts", JSON.stringify(carrito));
+    actualizarCarritoBtn();
+  }
+
+  function actualizarCarritoBtn(){
+    const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
+    const total = carrito.reduce((s,i)=>s+(i.precio*i.cantidad),0);
+    const btn = document.getElementById('carritoBtn');
+    if (btn) btn.innerText = `🛒 $${total}`;
+  }
+
+  document.querySelectorAll('.qty-container').forEach(c=>{
+    const input = c.querySelector('.qty');
+    const btns = c.querySelectorAll('.qty-btn');
+
+    btns[0].addEventListener('click',()=>{
+      let val = Number(input.value);
+      if(val > 0){ input.value = val - 1; guardarCarrito(); }
+    });
+
+    btns[1].addEventListener('click',()=>{
+      input.value = Number(input.value) + 1;
+      guardarCarrito();
+    });
+
+    input.addEventListener('input', guardarCarrito);
   });
-  localStorage.setItem("carritoYumgifts", JSON.stringify(carrito));
-  actualizarCarritoBtn();
-}
 
-function actualizarCarritoBtn(){
-  const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
-  const total = carrito.reduce((s,i)=>s+(i.precio*i.cantidad),0);
-  document.getElementById('carritoBtn').innerText = `🛒 $${total}`;
-}
+  const carritoBtn = document.getElementById('carritoBtn');
+  if (carritoBtn) carritoBtn.addEventListener('click',()=>{
+    document.getElementById('whatsapp').click();
+  });
 
-document.querySelectorAll('.qty-container').forEach(c=>{
-  const input=c.querySelector('.qty');
-  const btns=c.querySelectorAll('.qty-btn');
-  btns[0].addEventListener('click',()=>{ if(input.value>0){ input.value--; guardarCarrito(); }});
-  btns[1].addEventListener('click',()=>{ input.value++; guardarCarrito(); });
-  input.addEventListener('input', guardarCarrito);
+  const whatsappBtn = document.getElementById('whatsapp');
+  if (whatsappBtn) whatsappBtn.addEventListener('click', () => {
+    const carritoCompleto = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
+    if (carritoCompleto.length === 0){ alert("Agrega productos"); return; }
+
+    const nombre=document.getElementById('clienteNombre').value.trim();
+    const telefono=document.getElementById('clienteTelefono').value.trim();
+    if(!nombre || !telefono){ alert("Ingresa nombre y teléfono"); return; }
+
+    let total = carritoCompleto.reduce((s,i)=>s+i.precio*i.cantidad,0);
+    let productos = carritoCompleto.map(i=>`${i.nombre}: ${i.cantidad}`).join("\n");
+
+    let mensaje = `¡Hola Yumgiftsba! Te paso mi pedido:\n\nNombre: ${nombre}\nTeléfono: ${telefono}\n\nMi pedido es:\n${productos}\n\nTOTAL: $${total}`;
+
+    window.open(`https://wa.me/5491135936372?text=${encodeURIComponent(mensaje)}`,'_blank');
+  });
+
+  guardarCarrito();
 });
-
-document.getElementById('carritoBtn').addEventListener('click',()=>{
-  document.getElementById('whatsapp').click();
-});
-
-document.getElementById('whatsapp').addEventListener('click', () => {
-  const carritoCompleto = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
-  if (carritoCompleto.length === 0){ alert("Agrega productos"); return; }
-
-  const nombre=document.getElementById('clienteNombre').value.trim();
-  const telefono=document.getElementById('clienteTelefono').value.trim();
-  if(!nombre || !telefono){ alert("Ingresa nombre y teléfono"); return; }
-
-  let total = carritoCompleto.reduce((s,i)=>s+i.precio*i.cantidad,0);
-  let productos = carritoCompleto.map(i=>`${i.nombre}: ${i.cantidad}`).join("\n");
-
-  let mensaje =
-`¡Hola Yumgiftsba! Te paso mi pedido:
-
-Nombre: ${nombre}
-Teléfono: ${telefono}
-
-Mi pedido es:
-${productos}
-
-TOTAL: $${total}`;
-
-  window.open(`https://wa.me/5491135936372?text=${encodeURIComponent(mensaje)}`,'_blank');
-});
-
-guardarCarrito();
 </script>
-</body>
-</html>
