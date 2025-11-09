@@ -2,78 +2,67 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>YUMGIFTSBA - Donas</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#f6d7e7">
+<title>Mini Donas & Tequeños</title>
 <style>
-body { font-family: Arial, sans-serif; background:#fcebf3; margin:0; padding:20px; text-align:center; }
-h1 { font-size:28px; color:#ff4c8b; margin-bottom:20px; }
-.card { background:white; padding:15px; margin:10px auto; width:90%; max-width:400px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
-.card h2 { margin:0; font-size:18px; }
-.card p { margin:5px 0; font-weight:bold; width:100%; text-align:left; }
-.qty-container { display:flex; align-items:center; justify-content:center; gap:10px; margin-top:5px; }
-button.qty-btn { width:30px; height:30px; font-size:18px; border:none; border-radius:6px; background:#ff7aa6; color:white; cursor:pointer; }
-input.qty { width:40px; text-align:center; }
+  body { font-family: Arial; margin: 20px; }
+  header { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+  #carritoBtn { background: none; border: none; font-size: 20px; cursor: pointer; }
 
-.btn { display:inline-block; background:#25D366; padding:12px 20px; border-radius:8px; color:white; text-decoration:none; margin-top:20px; font-size:16px; }
-a.otros { display:block; margin:20px auto; color:#ff4c8b; font-weight:bold; text-decoration:none; }
+  .producto { 
+    border: 1px solid #ddd; 
+    padding: 15px; 
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
 
-/* BOTÓN CARRITO */
-#carritoBtn {
-  position: fixed;
-  top: 15px;
-  right: 18px;
-  background: #ff4c8b;
-  color: white;
-  padding: 10px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
-  box-shadow: 0px 3px 6px rgba(0,0,0,0.25);
-}
+  .qty-container { display: flex; align-items: center; margin-top: 8px; }
+  .qty-btn { padding: 5px 10px; cursor: pointer; }
+  .qty { width: 40px; text-align: center; margin: 0 5px; }
 </style>
 </head>
-
 <body>
 
-<div id="carritoBtn">🛒 $0</div>
+<header>
+  <button id="carritoBtn">🛒 $0</button>
+</header>
 
-<h1>Donas</h1>
-<a class="otros" href="otros.html">Ir a Tequeños / Otros Productos →</a>
-
-<div class="card">
-  <div><h2>Docena Donas Clásicas x12</h2><p>$6000</p></div>
+<h2>Mini Donas clásicas</h2>
+<div class="producto">
+  <p>Mini donas clásicas</p>
+  <p><strong>$6000</strong></p>
   <div class="qty-container">
     <button class="qty-btn">-</button>
-    <input class="qty" type="number" min="0" value="0" data-precio="6000" data-nombre="Docena Donas Clásicas">
+    <input type="number" class="qty" value="0" data-nombre="Mini Donas Clásicas" data-precio="6000">
     <button class="qty-btn">+</button>
   </div>
 </div>
 
-<div class="card">
-  <div><h2>Docena Donas Clásicas 20</h2><p>$10000</p></div>
+<h2>Tequeños</h2>
+<div class="producto">
+  <p>Tequeños</p>
+  <p><strong>$8500</strong></p>
   <div class="qty-container">
     <button class="qty-btn">-</button>
-    <input class="qty" type="number" min="0" value="0" data-precio="6000" data-nombre="Docena Donas Clásicas">
+    <input type="number" class="qty" value="0" data-nombre="Tequeños" data-precio="8500">
     <button class="qty-btn">+</button>
   </div>
 </div>
-  
-<a class="btn" id="whatsapp">Enviar Pedido por WhatsApp</a>
+
+<br>
+<label>Nombre:</label><br>
+<input type="text" id="clienteNombre"><br><br>
+
+<label>Teléfono:</label><br>
+<input type="text" id="clienteTelefono"><br><br>
+
+<button id="whatsapp">Enviar pedido por WhatsApp</button>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-
 function guardarCarrito(){
-  let carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
-
-  carrito = carrito.filter(i =>
-    !document.querySelector(`input[data-nombre="${i.nombre}"]`)
-  );
-
+  let carrito = [];
   document.querySelectorAll('.qty').forEach(input => {
     const cantidad = Number(input.value);
-    if(cantidad > 0){
+    if (cantidad > 0) {
       carrito.push({
         nombre: input.dataset.nombre,
         precio: Number(input.dataset.precio),
@@ -81,7 +70,6 @@ function guardarCarrito(){
       });
     }
   });
-
   localStorage.setItem("carritoYumgifts", JSON.stringify(carrito));
   actualizarCarritoBtn();
 }
@@ -92,31 +80,32 @@ function actualizarCarritoBtn(){
   document.getElementById('carritoBtn').innerText = `🛒 $${total}`;
 }
 
-document.querySelectorAll('.qty-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const input = btn.parentElement.querySelector('.qty');
-    if(btn.textContent==='+' ) input.value++;
-    if(btn.textContent==='-' && input.value>0) input.value--;
-    guardarCarrito();
-  });
-});
-
-document.querySelectorAll('.qty').forEach(i=>i.addEventListener('input', guardarCarrito));
-
-document.getElementById('carritoBtn').addEventListener('click',()=>{
-  document.getElementById('whatsapp').click();
+document.querySelectorAll('.qty-container').forEach(c=>{
+  const input=c.querySelector('.qty');
+  const btns=c.querySelectorAll('.qty-btn');
+  btns[0].addEventListener('click',()=>{ if(input.value>0){ input.value--; guardarCarrito(); }});
+  btns[1].addEventListener('click',()=>{ input.value++; guardarCarrito(); });
+  input.addEventListener('input', guardarCarrito);
 });
 
 document.getElementById('whatsapp').addEventListener('click', () => {
   const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
-  if(carrito.length===0){ alert("Agregá productos primero"); return; }
+  if (carrito.length === 0){ alert("Agrega productos"); return; }
+
+  const nombre=document.getElementById('clienteNombre').value.trim();
+  const telefono=document.getElementById('clienteTelefono').value.trim();
+  if(!nombre || !telefono){ alert("Ingresa nombre y teléfono"); return; }
 
   let total = carrito.reduce((s,i)=>s+i.precio*i.cantidad,0);
   let productos = carrito.map(i=>`${i.nombre}: ${i.cantidad}`).join("\n");
 
   let mensaje =
-`¡Hola Yumgiftsba! Te paso mi pedido:
+`¡Hola! Te paso mi pedido:
 
+Nombre: ${nombre}
+Teléfono: ${telefono}
+
+Mi pedido:
 ${productos}
 
 TOTAL: $${total}`;
@@ -124,8 +113,7 @@ TOTAL: $${total}`;
   window.open(`https://wa.me/5491135936372?text=${encodeURIComponent(mensaje)}`,'_blank');
 });
 
-actualizarCarritoBtn();
-});
+guardarCarrito();
 </script>
 
 </body>
