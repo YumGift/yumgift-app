@@ -84,4 +84,63 @@ input.qty { width:60px; text-align:center; border-radius:6px; border:1px solid #
   <div class="qty-container">
     <button class="qty-btn">-</button>
     <input class="qty" type="number" min="0" value="0" data-precio="10000" data-nombre="Tequeños Clásicos x12 (Crudos)">
-    <butto
+    <button class="qty-btn">+</button>
+  </div>
+</div>
+
+<div class="total">Total combinado: $<span id="total">0</span></div>
+
+<a href="index.html" class="go-pay">Ir a pagar / Enviar pedido 🛒</a>
+
+<script>
+function sincronizarCarrito() {
+  let carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
+
+  document.querySelectorAll('.qty').forEach(input => {
+    const nombre = input.dataset.nombre;
+    const item = carrito.find(p => p.nombre === nombre);
+    input.value = item ? item.cantidad : 0;
+  });
+
+  actualizarTotal();
+}
+
+function actualizarTotal() {
+  let carrito = [];
+
+  document.querySelectorAll('.qty').forEach(input => {
+    const cantidad = Number(input.value);
+    if (cantidad > 0) {
+      carrito.push({
+        nombre: input.dataset.nombre,
+        precio: Number(input.dataset.precio),
+        cantidad: cantidad
+      });
+    }
+  });
+
+  localStorage.setItem("carritoYumgifts", JSON.stringify(carrito));
+
+  let total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+
+  document.getElementById('total').innerText = total;
+}
+
+document.querySelectorAll('.qty-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const input = btn.parentElement.querySelector('.qty');
+    if(btn.textContent === '+') input.value++;
+    if(btn.textContent === '-' && input.value > 0) input.value--;
+    actualizarTotal();
+  });
+});
+
+document.querySelectorAll('.qty').forEach(input => {
+  input.addEventListener('input', actualizarTotal);
+});
+
+sincronizarCarrito();
+</script>
+
+</body>
+</html>
