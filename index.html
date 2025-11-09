@@ -16,7 +16,6 @@ h1 { font-size:28px; color:#ff4c8b; margin-bottom:20px; }
 button.qty-btn { width:30px; height:30px; font-size:18px; border:none; border-radius:6px; background:#ff7aa6; color:white; cursor:pointer; }
 input.qty { width:40px; text-align:center; }
 
-/* BOTÓN CARRITO */
 #carritoBtn {
   position: fixed;
   top: 15px;
@@ -33,7 +32,25 @@ input.qty { width:40px; text-align:center; }
 .btn { display:inline-block; background:#25D366; padding:12px 20px; border-radius:8px; color:white; text-decoration:none; margin-top:20px; font-size:16px; }
 .total { font-size:20px; font-weight:bold; margin-top:20px; color:#ff4c8b; }
 
-#direccion, #departamento, #referencia { display:none; }
+#popup {
+  display:none;
+  position: fixed;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+#popupContent {
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  max-width:400px;
+  width:90%;
+  text-align:left;
+}
+#popupContent h2 { margin-top:0; color:#ff4c8b; }
+#popupContent button { margin-top:10px; }
 </style>
 </head>
 <body>
@@ -84,23 +101,27 @@ input.qty { width:40px; text-align:center; }
   </div>
 </div>
 
-<!-- LINK A OTROS -->
 <a class="btn" href="otros.html" style="background:#ff4c8b;">Ver más productos</a>
 
 <div class="total">Total: $<span id="total">0</span></div>
 
-
 <!-- BOTÓN HACER PEDIDO -->
 <a class="btn" id="whatsapp">Enviar Pedido por WhatsApp</a>
 
+<!-- POPUP -->
+<div id="popup">
+  <div id="popupContent">
+    <h2>Detalle de tu pedido</h2>
+    <div id="popupProductos"></div>
+    <p class="total">Total: $<span id="popupTotal"></span></p>
+    <button id="confirmPedido">Confirmar y enviar a WhatsApp</button>
+    <button id="cerrarPopup">Cancelar</button>
+  </div>
+</div>
+
 <script>
 function guardarCarrito(){
-  let carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
-
-  carrito = carrito.filter(i =>
-    !document.querySelector(`input[data-nombre="${i.nombre}"]`)
-  );
-
+  let carrito = [];
   document.querySelectorAll('.qty').forEach(input => {
     const cantidad = Number(input.value);
     if(cantidad > 0){
@@ -133,27 +154,34 @@ document.querySelectorAll('.qty-btn').forEach(btn=>{
 document.querySelectorAll('.qty').forEach(i=>i.addEventListener('input', guardarCarrito));
 
 document.getElementById('carritoBtn').addEventListener('click',()=>{
-  document.getElementById('whatsapp').click();
-});
-
-document.getElementById('whatsapp').addEventListener('click', () => {
   const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
   if(carrito.length===0){ alert("Agregá productos primero"); return; }
+  // Mostrar popup
+  let html = carrito.map(i=>`<p>${i.nombre}: ${i.cantidad}</p>`).join('');
+  document.getElementById('popupProductos').innerHTML = html;
+  document.getElementById('popupTotal').innerText = carrito.reduce((s,i)=>s+i.precio*i.cantidad,0);
+  document.getElementById('popup').style.display = 'flex';
+});
 
+document.getElementById('cerrarPopup').addEventListener('click',()=>{
+  document.getElementById('popup').style.display = 'none';
+});
+
+document.getElementById('confirmPedido').addEventListener('click',()=>{
+  const carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
   let total = carrito.reduce((s,i)=>s+i.precio*i.cantidad,0);
   let productos = carrito.map(i=>`${i.nombre}: ${i.cantidad}`).join("\n");
 
-  let mensaje =
-`¡Hola Yumgiftsba! Te paso mi pedido:
+  let nombre = document.getElementById('clienteNombre').value.trim();
+  let telefono = document.getElementById('clienteTelefono').value.trim();
+  if(!nombre || !telefono){ alert("Por favor ingresa tu nombre y teléfono"); return; }
 
-${productos}
-
-TOTAL: $${total}`;
-
+  let mensaje = `¡Hola Yumgiftsba! Te paso mi pedido:\n\n${productos}\n\nTOTAL: $${total}`;
   window.open(`https://wa.me/5491135936372?text=${encodeURIComponent(mensaje)}`,'_blank');
+  document.getElementById('popup').style.display = 'none';
 });
 
-actualizarCarritoBtn();
+guardarCarrito();
 </script>
 
 </body>
