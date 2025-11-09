@@ -2,144 +2,123 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Otros Productos - YUMGIFTSBA</title>
+<title>Tequeños - YUMGIFTSBA</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#f6d7e7">
-
 <style>
 body { font-family: Arial, sans-serif; background:#fcebf3; margin:0; padding:20px; text-align:center; }
 h1 { font-size:28px; color:#ff4c8b; margin-bottom:20px; }
-nav a { margin-right:15px; color:#ff4c8b; font-weight:bold; text-decoration:none; }
 .card { background:white; padding:15px; margin:10px auto; width:90%; max-width:400px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
 .card h2 { margin:0; font-size:18px; }
 .card p { margin:5px 0; font-weight:bold; width:100%; text-align:left; }
 .qty-container { display:flex; align-items:center; justify-content:center; gap:10px; margin-top:5px; }
 button.qty-btn { width:30px; height:30px; font-size:18px; border:none; border-radius:6px; background:#ff7aa6; color:white; cursor:pointer; }
-input.qty { width:60px; text-align:center; border-radius:6px; border:1px solid #ccc; padding:5px; }
+input.qty, select, input[type="text"], input[type="date"], input[type="time"] { width:90%; max-width:400px; padding:8px; margin:8px 0; border-radius:6px; border:1px solid #ccc; }
+.btn { display:inline-block; background:#25D366; padding:12px 20px; border-radius:8px; color:white; text-decoration:none; margin-top:20px; font-size:16px; }
 .total { font-size:20px; font-weight:bold; margin-top:20px; color:#ff4c8b; }
-
-.go-pay {
-  display:block;
-  margin-top:25px;
-  background:#25D366;
-  color:white;
-  padding:12px;
-  border-radius:8px;
-  text-decoration:none;
-  font-size:16px;
-}
+#direccion, #departamento, #referencia { display:none; }
+.volver { display:block; margin:20px auto; color:#ff4c8b; font-weight:bold; text-decoration:none; }
 </style>
 </head>
 
 <body>
+<h1>Tequeños</h1>
 
-<nav>
-  <a href="index.html">Menú</a>
-  <a href="otros.html">Otros Productos</a>
-</nav>
+<a class="volver" href="index.html">← Volver al Menú Principal</a>
 
-<h1>Otros Productos 🍡</h1>
 
 <div class="card">
-  <div>
-    <h2>Mini Tequeños x25 (Crudos)</h2>
-    <p>$14.000</p>
-  </div>
+  <div><h2>Mini Tequeños x25 (Crudos)</h2><p>$14.000</p></div>
   <div class="qty-container">
     <button class="qty-btn">-</button>
-    <input class="qty" type="number" min="0" value="0" data-precio="14000" data-nombre="Mini Tequeños x25 (Crudos)">
+    <input class="qty" type="number" min="0" value="0" data-precio="14.000" data-nombre="Mini Tequeños x25 (Crudos)">
     <button class="qty-btn">+</button>
   </div>
 </div>
 
 <div class="card">
-  <div>
-    <h2>Mini Tequeños x25 (Fritos)</h2>
-    <p>$18.000</p>
-  </div>
+  <div><h2>Mini Tequeños x25 (Fritos)</h2><p>$18.000</p></div>
   <div class="qty-container">
     <button class="qty-btn">-</button>
-    <input class="qty" type="number" min="0" value="0" data-precio="18000" data-nombre="Mini Tequeños x25 (Fritos)">
+    <input class="qty" type="number" min="0" value="0" data-precio="18.000" data-nombre="Mini Tequeños x25 (Fritos)">
+    <button class="qty-btn">+</button>
+  </div>
+</div>  
+  
+<div class="card">
+  <div><h2>Tequeños Clasicos x12 (Fritos)</h2><p>$15.000</p></div>
+  <div class="qty-container">
+    <button class="qty-btn">-</button>
+    <input class="qty" type="number" min="0" value="0" data-precio="15.000" data-nombre="Tequeños Clasicos x12 (Fritos)">
     <button class="qty-btn">+</button>
   </div>
 </div>
 
 <div class="card">
-  <div>
-    <h2>Tequeños Clásicos x12 (Fritos)</h2>
-    <p>$15.000</p>
-  </div>
+  <div><h2>Tequeños Clasicos x12 (Crudos)</h2><p>$10.000</p></div>
   <div class="qty-container">
     <button class="qty-btn">-</button>
-    <input class="qty" type="number" min="0" value="0" data-precio="15000" data-nombre="Tequeños Clásicos x12 (Fritos)">
+    <input class="qty" type="number" min="0" value="0" data-precio="10.000" data-nombre="Tequeños Clasicos x12 (Crudos)">
     <button class="qty-btn">+</button>
   </div>
 </div>
 
-<div class="card">
-  <div>
-    <h2>Tequeños Clásicos x12 (Crudos)</h2>
-    <p>$10.000</p>
-  </div>
-  <div class="qty-container">
-    <button class="qty-btn">-</button>
-    <input class="qty" type="number" min="0" value="0" data-precio="10000" data-nombre="Tequeños Clásicos x12 (Crudos)">
-    <button class="qty-btn">+</button>
-  </div>
-</div>
+<div class="total">Total: $<span id="total">0</span></div>
 
-<div class="total">Total combinado: $<span id="total">0</span></div>
+<select id="pago">
+  <option value="Efectivo">Efectivo</option>
+  <option value="MercadoPago">Mercado Pago</option>
+</select>
 
-<a href="index.html" class="go-pay">Ir a pagar / Enviar pedido 🛒</a>
+<select id="envio">
+  <option value="Retiro en local">Retiro en local</option>
+  <option value="Envio a domicilio">Envío a domicilio</option>
+</select>
+
+<input type="text" id="direccion" placeholder="Dirección">
+<input type="text" id="departamento" placeholder="Departamento">
+<input type="text" id="referencia" placeholder="Referencia">
+
+<label><strong>Fecha de entrega</strong></label>
+<input type="date" id="fechaEntrega">
+
+<label><strong>Hora de entrega</strong></label>
+<input type="time" id="horaEntrega">
+
+<a class="btn" id="whatsapp">Enviar Pedido por WhatsApp</a>
 
 <script>
-function sincronizarCarrito() {
-  let carrito = JSON.parse(localStorage.getItem("carritoYumgifts")) || [];
-
-  document.querySelectorAll('.qty').forEach(input => {
-    const nombre = input.dataset.nombre;
-    const item = carrito.find(p => p.nombre === nombre);
-    input.value = item ? item.cantidad : 0;
+function actualizarTotal(){
+  let total = 0;
+  document.querySelectorAll('.qty').forEach(input=>{
+    total += Number(input.value)*Number(input.dataset.precio);
   });
-
-  actualizarTotal();
-}
-
-function actualizarTotal() {
-  let carrito = [];
-
-  document.querySelectorAll('.qty').forEach(input => {
-    const cantidad = Number(input.value);
-    if (cantidad > 0) {
-      carrito.push({
-        nombre: input.dataset.nombre,
-        precio: Number(input.dataset.precio),
-        cantidad: cantidad
-      });
-    }
-  });
-
-  localStorage.setItem("carritoYumgifts", JSON.stringify(carrito));
-
-  let total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
-
   document.getElementById('total').innerText = total;
 }
 
-document.querySelectorAll('.qty-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
+document.querySelectorAll('.qty-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
     const input = btn.parentElement.querySelector('.qty');
-    if(btn.textContent === '+') input.value++;
-    if(btn.textContent === '-' && input.value > 0) input.value--;
+    if(btn.textContent==='+') input.value++;
+    if(btn.textContent==='-' && input.value>0) input.value--;
     actualizarTotal();
   });
 });
 
-document.querySelectorAll('.qty').forEach(input => {
+document.querySelectorAll('.qty').forEach(input=>{
   input.addEventListener('input', actualizarTotal);
 });
 
-sincronizarCarrito();
+document.getElementById('whatsapp').addEventListener('click',()=>{
+  const productos=[];
+  document.querySelectorAll('.qty').forEach(input=>{
+    if(input.value>0) productos.push(`${input.dataset.nombre}: ${input.value}`);
+  });
+  if(productos.length===0){ alert('Agregá productos'); return; }
+  const total=document.getElementById('total').innerText;
+  let mensaje = `Hola! Quiero pedir:\n${productos.join('\n')}\n\nTotal: $${total}`;
+  window.open(`https://wa.me/5491135936372?text=${encodeURIComponent(mensaje)}`);
+});
 </script>
 
 </body>
